@@ -2,8 +2,9 @@
 #define _FILEOPS_H
 
 #include <stdint.h>
+#include "bmptypes.h"
 
-uint8_t* loadBMPFile(char* filepath);
+struct bmpHeader* loadBMPFile(char* filepath);
 /* uint8_t* loadJPGFile(char* filepath); */
 long getFilesize(FILE* file);
 

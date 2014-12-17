@@ -1,8 +1,7 @@
-IDIR=../include
 CC=gcc
-CFLAGS=-Wall -I$(IDIR)
+CFLAGS=-Wall
 
-LIBS=-lm
+#LIBS=-lm
 
 DEPS=fileops.h
 

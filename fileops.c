@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "fileops.h"
-
-#define uint8 unsigned char
+#include "bmptypes.h"
 
 long getFilesize(FILE* file)
 {
@@ -15,22 +15,40 @@ long getFilesize(FILE* file)
     return filesize;
 }
 
-
-uint8_t* loadBMPFile(char* filepath)
+struct bmpHeader* loadBMPFileHeader(FILE* file, struct bmpHeader* header)
 {
-    uint8_t* contents;
+	int i = 0;
+	uint8_t headerBytes[BMP_EOH];
+	
+	for(i = 0; i < BMP_EOH; i++)
+	{
+		headerBytes[i] = fgetc(file);
+	}
+	
+	header = (struct bmpHeader*) memcpy(header, &headerBytes[0], sizeof(struct bmpHeader));
+	
+	return header;
+}
+
+struct bmpHeader* loadBMPFile(char* filepath)
+{
+	struct bmpHeader* file_header;
     FILE* bmpfile;
     long filesize;
 
     bmpfile = fopen(filepath, "rb");
     
     filesize = getFilesize(bmpfile);
+	
+	printf("Filesize: %ld\n", filesize);
 
-    contents = (uint8_t*)malloc(filesize);
+	file_header = (struct bmpHeader*) malloc(sizeof(struct bmpHeader));
+	
+	file_header = loadBMPFileHeader(bmpfile, file_header);
 
     fclose(bmpfile);
 
-    return contents;
+    return file_header;
 }
 
 
