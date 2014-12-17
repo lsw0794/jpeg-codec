@@ -1,19 +1,14 @@
-IDIR=include
+IDIR=../include
 CC=gcc
 CFLAGS=-Wall -I$(IDIR)
 
-ODIR=obj
-LDIR=lib
-SRCDIR=src
 LIBS=-lm
 
-_DEPS=fileops.h
-DEPS=$(patsubst %,$(IDIR)/%,$(_DEPS))
+DEPS=fileops.h
 
-_OBJ=jpgenc.o jpgdec.o fileops.o main.o
-OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
+OBJ=main.o jpgenc.o jpgdec.o fileops.o
 
-$(ODIR)/%.o: $(SRCDIR)%.c $(DEPS)
+%.o: /%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 
@@ -25,5 +20,5 @@ all: jpeg-codec
 .PHONY: clean
 
 clean:
-	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~ jpeg-codec
+	rm -f *.o *~ core *~ jpeg-codec
 
