@@ -8,7 +8,6 @@
 int main(int argc, char* argv[])
 {
 	struct bmpHeader* header;
-	int i = 0;
 	
 	if(argc != 2)
 	{
@@ -18,15 +17,8 @@ int main(int argc, char* argv[])
 
 	header = loadBMPFile(argv[1]);
 	
-	printf("Header type: %.*s\n", sizeof(header->header), header->header);
-	printf("Filesize: %.*s\tBytes:", sizeof(header->filesize), header->filesize);
-	while(i < sizeof(header->filesize))
-	{
-		printf("0x%02x\t", header->filesize[i]);
-		i++;
-	}
-	
-	printf("\nDecimal equivalent: %ld Bytes\n", (long)&header->filesize[0]);
+	printf("Header type: %.*s\n", sizeof(header->header_type), header->header_type);
+	printf("Filesize: %lld Bytes\n", header->filesize);
 	
 	free(header);	
 	

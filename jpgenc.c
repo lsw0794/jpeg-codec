@@ -1,8 +1,10 @@
 #include "jpgenc.h"
 #include <stdint.h>
 #include <stdlib.h>
+#include "jpgtypes.h"
+#include "bmptypes.h"
 
-struct jpgYCbrPixel* encodeBMPtoJPEG(struct jpgRgbPixel rgbImg[], size_t sz)
+struct jpgYCbrPixel* encodeBMPtoJPEG(struct bmpRgbPixel rgbImg[], size_t sz)
 {
 	struct jpgYCbrPixel* ycbrImg = (struct jpgYCbrPixel*)malloc(sz);
 	int i = 0;
