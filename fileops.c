@@ -36,6 +36,7 @@ struct bmpHeader* loadBMPFileHeader(FILE* file, struct bmpHeader* header)
 	}
 
 	printf("Offset now: %d\n", i);
+	printf("Header filesize size: %d\n", sizeof(header->filesize));
 
 	/* Need to reverse filesize bytes from 0 -> 4 to 4 -> 0 - it's backwards for some reason... */
 	for(j = 0; j < sizeof(header->filesize); i++, j++)

@@ -14,7 +14,7 @@ struct bmpRgbPixel
 struct bmpHeader
 {
 	uint8_t header_type[2];
-	long long filesize;
+	int filesize;
 	uint8_t rsrvd1[2];
 	uint8_t rsrvd2[2];
 	uint8_t pxl_off[4];
