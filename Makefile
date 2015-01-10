@@ -18,6 +18,9 @@ all: jpeg-codec
 
 .PHONY: clean
 
+debug:
+	CFLAGS += -g -D DEBUG
+
 clean:
 	rm -f *.o *~ core *~ jpeg-codec
 

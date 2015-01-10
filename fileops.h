@@ -4,8 +4,6 @@
 #include <stdint.h>
 #include "bmptypes.h"
 
-struct bmpHeader* loadBMPFile(char* filepath);
-/* uint8_t* loadJPGFile(char* filepath); */
-long getFilesize(FILE* file);
+uint8_t* loadBMPFile(char* filepath, struct bmpInfoHeader* infoHeader);
 
 #endif /* _FILEOPS_H */

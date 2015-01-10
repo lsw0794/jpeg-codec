@@ -7,20 +7,25 @@
 
 int main(int argc, char* argv[])
 {
-	struct bmpHeader* header;
-	
+	struct bmpInfoHeader* infoHeader;
+	uint8_t* imgData;
+	int i = 0;
+
+	infoHeader = (struct bmpInfoHeader*) malloc(sizeof(struct bmpInfoHeader));
+
 	if(argc != 2)
 	{
 		printf("Error: Expecting 1 argument (bmp filename)\n");
 		return -1;
 	}
 
-	header = loadBMPFile(argv[1]);
+	imgData = loadBMPFile(argv[1], infoHeader);
 	
-	printf("Header type: %.*s\n", sizeof(header->header_type), header->header_type);
-	printf("Filesize: %lld Bytes\n", header->filesize);
-	
-	free(header);	
-	
+	for(i = 0; i < 100; ++i)
+	{
+		printf("0x%02x ", *(imgData + i));
+	}
+
+	free(imgData);
     return 0;
 }
