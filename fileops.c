@@ -59,18 +59,24 @@ void printBMPInfoHeader(struct bmpInfoHeader* infoHdr)
 	
 }
 
-uint8_t* loadBMPFile(char *filename, struct bmpInfoHeader* infoHeader)
+uint32_t** loadBMPFile(char *filename, struct bmpInfoHeader* infoHeader)
 {
 	FILE *fp;
 	struct bmpHeader* bitmapFileHeader;
 	uint8_t* bmpImg;
 	int imageIdx = 0;
-	uint8_t tempRGB;	// Swap variable
+	int i, j;
+	//uint8_t tempRGB;	// Swap variable
+	int bmpWidth, bmpHeight;
+	uint32_t** bitmap;
 
 	// Open file in rb mode
 	fp = fopen(filename, "rb");
 	if(fp == NULL)
+	{
+		printf("Error opening file '%s'. File does not exist.\n", filename);
 		return NULL;
+	}
 
 	bitmapFileHeader = (struct bmpHeader*) malloc(sizeof(struct bmpHeader));
 
@@ -82,6 +88,7 @@ uint8_t* loadBMPFile(char *filename, struct bmpInfoHeader* infoHeader)
 	// Verify that this is a BMP file
 	if(*((int16_t*)bitmapFileHeader->filetype) != 0x4D42)
 	{
+		printf("Invalid magic number for BMP format - should be 0x4D42, is %hd.\n", *((int16_t*)bitmapFileHeader->filetype));
 		fclose(fp);
 		return NULL;
 	}
@@ -90,6 +97,9 @@ uint8_t* loadBMPFile(char *filename, struct bmpInfoHeader* infoHeader)
 	fread(infoHeader, sizeof(struct bmpInfoHeader), 1, fp);
 
 	printBMPInfoHeader(infoHeader);
+
+	bmpWidth = *((int32_t*)infoHeader->bmpWidth);
+	bmpHeight = *((int32_t*)infoHeader->bmpHeight);
 
 	// move file point to beginning of bitmap data
 	fseek(fp, *((int32_t*)bitmapFileHeader->pxl_off), SEEK_SET);
@@ -102,6 +112,7 @@ uint8_t* loadBMPFile(char *filename, struct bmpInfoHeader* infoHeader)
 	if(!bmpImg)
 	{
 		free(bmpImg);
+		printf("Error allocating memory for bitmap image.\n");
 		fclose(fp);
 		return NULL;
 	}
@@ -113,7 +124,27 @@ uint8_t* loadBMPFile(char *filename, struct bmpInfoHeader* infoHeader)
 	if(bmpImg == NULL)
 	{
 		fclose(fp);
+		printf("Error reading bitmap image.\n");
 		return NULL;
+	}
+
+	bitmap = (uint32_t**)malloc(bmpHeight * sizeof(uint32_t*));
+
+	for(i = 0; i < bmpHeight; i++)
+	{
+		bitmap[i] = (uint32_t*)malloc(bmpWidth * sizeof(uint32_t));
+	}
+	
+	imageIdx = 0;
+	for(i = 0; i < bmpHeight; i++)
+	{
+		for(j = 0; j < bmpWidth; j++)
+		{
+			bitmap[i][j] = (bmpImg[imageIdx] << 16) | 
+			 			   (bmpImg[imageIdx+1] << 8) |
+			 				bmpImg[imageIdx+2];
+			imageIdx += 3;
+		}
 	}
 
 	// Swap r and b values to get RGB, because bitmap is BGR
@@ -127,5 +158,15 @@ uint8_t* loadBMPFile(char *filename, struct bmpInfoHeader* infoHeader)
 	// close file and return bitmap image data
 	fclose(fp);
 
-	return bmpImg;
+	free(bmpImg);
+
+	return bitmap;
+}
+
+void freeBMP(uint32_t** bitmap, int w, int h)
+{
+	int i = 0;
+	for(i = 0; i < h; i++)
+		free(bitmap[i]);
+	free(bitmap);
 }

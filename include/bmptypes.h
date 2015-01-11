@@ -31,16 +31,6 @@ struct bmpInfoHeader
 	uint8_t coloursUsed[4];
 	uint8_t coloursImportant[4];
 	uint8_t colourSpace[4];
-	uint8_t unused2[64];
-};
-
-
-struct colourTable
-{
-	uint8_t red;
-	uint8_t green;
-	uint8_t blue;
-	uint8_t rsrvd;
 };
 
 #endif /* _BMP_TYPES_H */

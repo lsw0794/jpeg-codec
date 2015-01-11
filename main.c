@@ -8,8 +8,9 @@
 int main(int argc, char* argv[])
 {
 	struct bmpInfoHeader* infoHeader;
-	uint8_t* imgData;
-	int i = 0;
+	uint32_t** imgData;
+	int i, j;
+	int32_t w, h;
 
 	infoHeader = (struct bmpInfoHeader*) malloc(sizeof(struct bmpInfoHeader));
 
@@ -20,12 +21,22 @@ int main(int argc, char* argv[])
 	}
 
 	imgData = loadBMPFile(argv[1], infoHeader);
-	
-	for(i = 0; i < 100; ++i)
+
+	if(imgData == NULL)
 	{
-		printf("0x%02x ", *(imgData + i));
+		printf("Image is not valid!\n");
+		return -1;
 	}
 
-	free(imgData);
+	w = *((int32_t*)infoHeader->bmpWidth);
+	h = *((int32_t*)infoHeader->bmpHeight);
+
+	printf("Bitmap %d x %d\n", w, h);
+
+	convertToJPG(imgData);
+
+
+	freeBMP(imgData, w, h);
     return 0;
 }
+
