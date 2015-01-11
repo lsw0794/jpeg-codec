@@ -1,26 +1,47 @@
-CC=gcc
-CFLAGS=-Wall
+# Compiler is gcc for C
+CC = gcc
 
-#LIBS=-lm
+# Compiler flags:
+#	-g 		adds debugging information
+#	-Wall	turns on most, but not all, compiler warnings
+CFLAGS = -g -Wall
 
-DEPS=fileops.h
+# define include dirs
+INCLUDES = -Iinclude
 
-OBJ=main.o jpgenc.o jpgdec.o fileops.o
+# define C source files
+SRCS = main.c jpgenc.c jpgdec.c fileops.c
 
-%.o: /%.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+# Define the C object files
+# This uses the suffix replacement within a macro:
+#	$(name:string1=string2)
+# For each word in "name", replace "string1" with "string 2"
+# So below, we're replacing the .c suffix in all words in SRCS
+# with .o suffix
+OBJS = $(SRCS:.c=.o)
 
+# Define the main executable file
+MAIN = jpeg-codec
 
-jpeg-codec: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+.PHONY: depend clean
 
-all: jpeg-codec
+all: $(MAIN)
+	@echo jpeg-codec has been compiled
 
-.PHONY: clean
+$(MAIN): $(OBJS)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS)
 
-debug:
-	CFLAGS += -g -D DEBUG
+# This is a suffix replacement rule for building .o's from .c's
+# It uses automatic variables 
+# $< : the name of the prerequisite rule (a .c file)
+# $@ : the name of the target of the rule (a .o file)
+.c.o:
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -f *.o *~ core *~ jpeg-codec
+	$(RM) *.o *~ $(MAIN)
 
+depend:
+	makedepend $(INCLUDES) $^
+
+# DO NOT DELETE THIS LINE -- make depend needs it

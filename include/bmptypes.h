@@ -30,24 +30,10 @@ struct bmpInfoHeader
 	uint8_t yPxm[4];
 	uint8_t coloursUsed[4];
 	uint8_t coloursImportant[4];
-	// TODO: Find out the rest of the header of OS/2 BMP format 
+	uint8_t colourSpace[4];
+	uint8_t unused2[64];
 };
 
-
-struct bmpInfoHeader_old
-{
-	int32_t ihSize;
-	int32_t bmpWidth;
-	int32_t bmpHeight;
-	int16_t planes;
-	int16_t bitCount;
-	int32_t compression;
-	int32_t imgSize;
-	int32_t xPxm;
-	int32_t yPxm;
-	int32_t coloursUsed;
-	int32_t coloursImportant;
-};
 
 struct colourTable
 {

@@ -4,7 +4,6 @@
 #include <endian.h>
 #include "fileops.h"
 #include "bmptypes.h"
-#include "jpgtypes.h"
 
 
 void printBMPHeader(struct bmpHeader* hdr)
@@ -30,7 +29,7 @@ void printBMPHeader(struct bmpHeader* hdr)
 
 void printBMPInfoHeader(struct bmpInfoHeader* infoHdr)
 {
-	/*int i = 0;
+/*	int i = 0;
 	uint8_t* byte;
 
 	byte = (uint8_t*) infoHdr;
@@ -40,7 +39,8 @@ void printBMPInfoHeader(struct bmpInfoHeader* infoHdr)
 	printf("Bytewise: \n");
 	for(i = 0; i < sizeof(struct bmpInfoHeader); i++)
 	{
-		printf("%d: 0x%02x\n", i, *(byte++));
+		printf("%d: 0x%02x (%c)\n", i, *(byte), *(byte));
+		byte++;
 	}
 
 	printf("\nElement wise: \n");*/
@@ -55,6 +55,7 @@ void printBMPInfoHeader(struct bmpInfoHeader* infoHdr)
 	printf("Y Pixels per m: %hu (0x%x)\n", *((int32_t*)infoHdr->yPxm), *((int32_t*)infoHdr->yPxm));
 	printf("Colours Used: %hu (0x%x)\n", *((int32_t*)infoHdr->coloursUsed), *((int32_t*)infoHdr->coloursUsed));
 	printf("Colours Important: %hu (0x%x)\n", *((int32_t*)infoHdr->coloursImportant), *((int32_t*)infoHdr->coloursImportant));
+	printf("Colour space: %.4s (0x%x)\n", infoHdr->colourSpace, *((int32_t*)infoHdr->colourSpace));
 	
 }
 
@@ -116,12 +117,12 @@ uint8_t* loadBMPFile(char *filename, struct bmpInfoHeader* infoHeader)
 	}
 
 	// Swap r and b values to get RGB, because bitmap is BGR
-	for(imageIdx = 0; imageIdx < *((int32_t*)infoHeader->imgSize); imageIdx += 3)
+	/*for(imageIdx = 0; imageIdx < *((int32_t*)infoHeader->imgSize); imageIdx += 3)
 	{
 		tempRGB = bmpImg[imageIdx];
 		bmpImg[imageIdx] = bmpImg[imageIdx + 2];
 		bmpImg[imageIdx + 2] = tempRGB;
-	}
+	}*/
 
 	// close file and return bitmap image data
 	fclose(fp);
